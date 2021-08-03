@@ -47,8 +47,7 @@ export default function Home({ data } ) {
   const [info, setInfo] = useState(initialState)
   console.log('info', info );
 
-  if(load === true) return 'Please Reload';
-  else return (
+ return (
     <>
     <div className={styles.gain}>
     <h1> Gain Solutions Interview Task </h1>

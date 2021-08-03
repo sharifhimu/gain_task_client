@@ -298,8 +298,8 @@ const StudentTable = ( { info } ) => {
                             <button className={styles.cross} onClick={() => delSubjectbtn(x,v) } > x </button> 
                             </div> )} 
                             </td>
-                            <td className={styles.btn} > <button onClick={ () => addSubjectbtn(v) } > Add Subjects </button> </td>
-                            <td onClick={() => deletebtn(v) } > Delete </td>
+                            <td className={styles.btn} > <button style={{ cursor: 'pointer' }} onClick={ () => addSubjectbtn(v) } > Add Subjects </button> </td>
+                            <td  className={styles.btn2} onClick={() => deletebtn(v) } > Delete </td>
                         </tr>
                  ) )
             }          
@@ -351,7 +351,7 @@ const StudentTable = ( { info } ) => {
                 <div  className={styles.modal}  >
                     <div className={ styles.modalinner } >
                     <h2 style={{ color: 'darkcyan' }} > Do you want to delete this Data Row ? </h2>
-                    <button onClick={ () => delData() } style={{ width: '20%', marginTop: '20px' }}  > Yes </button>
+                    <button onClick={ () => delData() } style={{ width: '20%', marginTop: '20px', backgroundColor: 'red' }}  > Yes </button>
                     <button onClick={ () => setModal3(false) } style={{ width: '20%', marginBottom: '50px' }}  > No </button>
                     </div>
                 </div>
@@ -362,7 +362,7 @@ const StudentTable = ( { info } ) => {
                 <div  className={styles.modal}  >
                     <div className={ styles.modalinner } >
                     <h2 style={{ color: 'darkcyan' }} > Do you want to delete this Subject ? </h2>
-                    <button onClick={ () => delSubject() } style={{ width: '20%', marginTop: '20px' }} > Yes </button>
+                    <button onClick={ () => delSubject() } style={{ width: '20%', marginTop: '20px', backgroundColor: 'red' }} > Yes </button>
                     <button onClick={ () => setModal4(false) } style={{ width: '20%', marginBottom: '50px' }} > No </button>
                     </div>
                 </div>
