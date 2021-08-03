@@ -1,121 +1,230 @@
 .container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
+  /* min-height: 100vh; */
+  /* padding: 0 0.5rem; */
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+}
+
+.gain{
+  display: flex; 
+  justify-content: center;
+}
+
+.gain > h1{
+  /* border: 1px solid; */
+  padding: 10px ;
+  background-color: darkcyan;
+  color: whitesmoke;
+  border-radius: .2rem;
+  box-shadow: 0 0 5px 1px rgba(0,0,0,.4);
+}
+
+.tablediv{
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.main {
-  padding: 5rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
-.footer {
-  width: 100%;
-  height: 100px;
-  border-top: 1px solid #eaeaea;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.tablediv > div{
+  padding: 10px;
+
 }
 
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+.tablediv > div > .addnew{
+  background-color: darkcyan;
+  width: 20%;
+  margin-bottom: 10px;
+  color: whitesmoke;
+  font-weight: 600;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  transition: .2s;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
+.tablediv > div > .addnew:hover{
+  background-color: darkslategray;
 }
 
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+.tablediv > div > table {
+  overflow: auto;
+  padding: 10px;
+  box-shadow: 0 0 4px 2px rgba(0,0,0,.2);
 }
 
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
 
-.title,
-.description {
+
+.tablediv > div >   table > thead > tr > td {
+  border: 1px solid;
   text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  color: aliceblue;
+} 
+
+.tablediv > div > table > thead > tr > td:nth-child(2n){
+  background-color: darkcyan;
+}
+.tablediv > div > table > thead > tr > td:nth-child(2n+1){
+  background-color:darkslategray;
 }
 
-.description {
-  line-height: 1.5;
-  font-size: 1.5rem;
+.tablediv > div > table > tbody > tr > td {
+  border: 1px solid;
+  text-align: center;
+  padding: 10px;
+  font-weight: 600;
+  color: aliceblue;
 }
 
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
+.tablediv > div > table > tbody > tr > td:nth-child(2n+1){
+  background-color: darkcyan;
+}
+.tablediv > div > table > tbody > tr > td:nth-child(2n){
+  background-color:darkslategray;
 }
 
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-  margin-top: 3rem;
+.tablediv > div > table > tbody > tr > td > button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-weight: 600;
+  color: aliceblue;
+
+}
+.tablediv > div > table > tbody > tr > .btn{
+  transition: .2s;
 }
 
-.card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  width: 45%;
+
+.tablediv > div > table > tbody > tr > .btn:hover{
+  background-color: darkcyan;
+  cursor: pointer;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+.tablediv > div > table > tbody > tr > td:last-child{
+  transition: .2s;
 }
 
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+.tablediv > div > table > tbody > tr > td:last-child:hover{
+  background-color: darkslategray;
+  cursor: pointer;
 }
 
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
-}
-
-@media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
+ .cross{
+    /* content: 'x'; */
+    background-color: rgb(241, 59, 59);
+    font-size: 12px;
+    font-weight: 600;
+    height: 15px;
+    width: min-content;
+    color: whitesmoke;
+    margin: 0 5px;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0  0 4px 1px rgba(0,0,0,.2);
   }
+
+ /* modal */
+
+ .modal{
+  position: absolute; 
+  height: max-content; 
+  width: 100%; 
+  box-shadow: 0 0 5px 0px rgba(0,0,0,.5); 
+  top: 10%; 
+  z-index: 10; 
+  background-color: white;
+  text-align: center;
+  /* display: flex; */
+  /* flex-direction: row; */
+ }
+
+
+ .modal > .modalinner, .modal > .modalinner > form {
+   display: flex;
+   flex-direction: column;
+   /* justify-content: center; */
+   align-items: center;
+ }
+
+ .dropdown{
+   margin: 5px 0;
+ }
+
+ .dropdown > select{
+  max-width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  background-color: darkcyan;
+  color: whitesmoke;
+  font-weight: 600;
+ }
+
+ .modal > .modalinner > input, .modal > .modalinner > form > input {
+   width: 100%;
+   margin-bottom: 10px;
+   background-color: darkcyan;
+   outline: none;
+   border: none;
+   padding: 10px ;
+   box-shadow: 0 0 4px 1px rgba(0,0,0,.2);
+   color: whitesmoke;
+   transition: .2s;
+ }
+ .modal > .modalinner > input::placeholder, .modal > .modalinner > form > input::placeholder  {
+   color: whitesmoke;
+   font-weight: 600;
+ }
+
+ .modal > .modalinner > input:focus, .modal > .modalinner > form > input:focus {
+   color: whitesmoke;
+   font-weight: 600;
+   background-color: darkslategray;
+ }
+
+ .modal > .modalinner > button, .modal > .modalinner >  form > button{
+   width: 100%;
+   margin-bottom: 10px;
+   color: whitesmoke;
+   font-weight: 600;
+   border: none;
+   padding: 10px;
+   cursor: pointer;
+ }
+
+ .modal > .modalinner > button:first-of-type, .modal > .modalinner > form >  button:first-of-type{
+   background-color: darkcyan;
+ }
+
+ .modal > .modalinner > button:last-of-type, .modal > .modalinner > form > button:last-of-type {
+  background-color: darkslategray;
+}
+
+@media (max-width: 560px) {
+
+  .container{
+    display: block;
+  }
+
+  .gain > h1{
+    font-size: 20px;
+  }
+
+  .tablediv{
+    width: min-content;
+  }
+
+  .tablediv > h1 {
+    font-size: 20px;
+  }
+
+  .modal{
+    width: 36rem;
+  }
+
 }
