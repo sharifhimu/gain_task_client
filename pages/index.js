@@ -15,24 +15,29 @@ export const getServerSideProps = async() => {
   //   uri: "http://localhost:4000/graphql",
   //   cache: new InMemoryCache()
   // })
-  const { data } = await client.query({
-    query: gql`
-    query{
-       getAll 
-       {
-         id
-         Name
-         Email
-         Phone
-         Dob
-         Subjects
+  try{
+    const { data } = await client.query({
+      query: gql`
+      query{
+         getAll 
+         {
+           id
+           Name
+           Email
+           Phone
+           Dob
+           Subjects
+         }
        }
-     }
-    `
-  })
-  console.log('data', data );
-  return {
-    props: { data : data.getAll }
+      `
+    })
+    console.log('data', data );
+    return {
+      props: { data : data.getAll }
+    }
+  }
+  catch(err){
+    console.log('server err', err );
   }
 }
 
@@ -42,7 +47,8 @@ export default function Home({ data } ) {
   const [info, setInfo] = useState(initialState)
   console.log('info', info );
 
-  return (
+  if(load === true) return 'Please Reload';
+  else return (
     <>
     <div className={styles.gain}>
     <h1> Gain Solutions Interview Task </h1>

@@ -27,6 +27,8 @@ const StudentTable = ( { info } ) => {
     
 
     // const { loading, error, data } = useQuery(getAll);
+    // if (loading) return "Loading";
+    // if (error) return "Error";
     const [ updateSubject, {updateerr} ] = useMutation(updateSubjectQuery)
     const [ createPost, {createerr} ] = useMutation(createQuery)
     const [ deletePost, {delerr} ] = useMutation(deleteQuery)
@@ -75,8 +77,7 @@ const StudentTable = ( { info } ) => {
         }
     }
 
-    // if (loading) return "Loading";
-    // if (error) return "Error";
+
     // console.log(data.getAll);
 
      // add new student
