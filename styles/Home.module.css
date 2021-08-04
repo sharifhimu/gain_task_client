@@ -111,10 +111,10 @@
 .tablediv > div > table > tbody > tr > td:last-child{
   transition: .2s;
   box-shadow: 0 0 4px 1px rgba(0,0,0,.2);
-  border-radius: .5rem;
 }
 
 .tablediv > div > table > tbody > tr >  .btn2{
+  border-radius: .5rem;
   background-color: rgb(241, 59, 59) !important;
 }
 

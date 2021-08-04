@@ -1,9 +1,10 @@
 import { ApolloClient, gql, InMemoryCache, ApolloProvider } from '@apollo/client'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import StudentTable from '../Components/StudentTable/StudentTable'
 import styles from '../styles/Home.module.css'
+
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/graphql",
@@ -11,10 +12,7 @@ const client = new ApolloClient({
 })
 
 export const getServerSideProps = async() => {
-  // const client = new ApolloClient({
-  //   uri: "http://localhost:4000/graphql",
-  //   cache: new InMemoryCache()
-  // })
+
   try{
     const { data } = await client.query({
       query: gql`
@@ -41,13 +39,16 @@ export const getServerSideProps = async() => {
   }
 }
 
+
+
 export default function Home({ data } ) {
+
   
   const initialState = data;
   const [info, setInfo] = useState(initialState)
   console.log('info', info );
 
- return (
+  return (
     <>
     <div className={styles.gain}>
     <h1> Gain Solutions Interview Task </h1>
@@ -60,7 +61,8 @@ export default function Home({ data } ) {
       </Head>
 
       <ApolloProvider client={ client } >
-        <StudentTable info={info}  />
+        
+        <StudentTable info={ info }  />
       </ApolloProvider>
 
       

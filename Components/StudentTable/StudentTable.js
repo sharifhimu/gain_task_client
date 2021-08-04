@@ -1,4 +1,4 @@
-import { useQuery, gql, useMutation, defaultDataIdFromObject } from "@apollo/client";
+import { useQuery, gql, useMutation, defaultDataIdFromObject, ApolloClient, InMemoryCache } from "@apollo/client";
 import { useState, useEffect } from "react";
 import { createQuery, deleteQuery, getAll, updateSubjectQuery } from "../../pages/api/Api";
 import SubjectTable from "../SubjectTable/SubjectTable";
@@ -6,6 +6,7 @@ import SubjectTable from "../SubjectTable/SubjectTable";
 import styles from '../../styles/Home.module.css'
 import SubjectDropdown from "../SubjectDropdown/SubjectDropdown";
 
+  
 
 const StudentTable = ( { info } ) => {
 
@@ -21,17 +22,46 @@ const StudentTable = ( { info } ) => {
     const [delInfo, setDelinfo ] = useState()
     const [delsub, setDelsub] = useState()
     // const [newsub, setNewsub] = useState(0)
-    // const [fields, setFields] = useState([]);
+    const [fields, setFields] = useState([{ value: null }]);
+    const [load, setload ] = useState(false)
 
   
-    
-
-    // const { loading, error, data } = useQuery(getAll);
-    // if (loading) return "Loading";
-    // if (error) return "Error";
     const [ updateSubject, {updateerr} ] = useMutation(updateSubjectQuery)
     const [ createPost, {createerr} ] = useMutation(createQuery)
     const [ deletePost, {delerr} ] = useMutation(deleteQuery)
+
+
+    useEffect( async() => {
+        try{
+        setload(true)
+        const client = new ApolloClient({
+        uri: "http://localhost:4000/graphql",
+        cache: new InMemoryCache()
+        })
+          const { data } = await client.query({
+            query: gql`
+            query{
+               getAll 
+               {
+                 id
+                 Name
+                 Email
+                 Phone
+                 Dob
+                 Subjects
+               }
+             }
+            `
+          })
+          console.log('data from studenttable', data.getAll );
+          setInfo2(data.getAll)
+          setload(false)
+        }
+        catch(err){
+        setload(false)
+        console.log('server err', err );
+        }
+    }, [])
 
     // add new subject
 
@@ -41,6 +71,13 @@ const StudentTable = ( { info } ) => {
         // console.log('on click', v );
 
     }
+
+    const onDropdownclk = (clk) => {
+        console.log('dropdown', clk);
+        setInput(clk)
+        // setadd( { ...add, subject: clk } )
+    }
+
 
     const submitBtn = () => {
         
@@ -59,10 +96,13 @@ const StudentTable = ( { info } ) => {
                 }
             })
             console.log('posted');
-            let arr = info2;
+            // let arr = [...info2];
+            let arr = info2.map( x => { let newdata = {...x};  return newdata })
+            console.log('arr info2', arr );
             for(let i in arr ){
                 if(arr[i].Name == curObj.Name ){
-                    arr[i].Subjects = updated
+                    console.log('arr[i]', arr[i] );
+                    arr[i].Subjects = [...updated]
                     console.log('arr[]', arr[i] );
                 }
             }
@@ -90,8 +130,9 @@ const StudentTable = ( { info } ) => {
      const oncreateNew = (e) => {
         e.preventDefault();
         console.log('new student info', add );
+        let isSelect = add.subject.findIndex(x => x == 'select');
 
-        if(add.name != undefined && add.email != undefined && add.phone != undefined && add.dob != undefined && add.subject != undefined ){
+        if(add.name != undefined && add.email != undefined && add.phone != undefined && add.dob != undefined && add.subject != undefined && isSelect < 0 ){
 
             if (!Number(add.phone)) {
                 alert("Your phone must be a number");
@@ -103,63 +144,71 @@ const StudentTable = ( { info } ) => {
                         Email: add.email,
                         Phone: add.phone,
                         Dob: add.dob,
-                        Subjects: [add.subject]
+                        Subjects: add.subject
                     }
                 })
                 setModal2(false)
 
-                let arr = info2;
-                arr.push({ Name: add.name, Email: add.email, Phone: add.phone, Dob: add.dob, Subjects: [add.subject] });
+                // let arr = info2;
+                let arr = info2.map( x => { let newdata = {...x};  return newdata })
+                arr.push({ Name: add.name, Email: add.email, Phone: add.phone, Dob: add.dob, Subjects: add.subject });
                 setInfo2(arr);
                 console.log('arrr', arr, 'info2', info2 );
+                setFields( [{ value: null }] )
             }
         }
         else{
             alert('You must fill full form')
         }            
-
     }
 
-    // const handleChange = (i, e) => {
-    //     setInput(e)
-    //     let values = [...fields];
-    //     // let similar = values.findIndex( x => x == e.target.value )
-    //     // if(similar < 0  ){
-    //         values[i] = e;
-    //         setFields(values);
-    //         setadd( { ...add, subject: values } )
-    //         // }
-    //         // else{
-    //             //     alert(' you can\'t add a subject more than one time ')
-    //             // }
+    const onClosenewstumodal = () => {
+        setModal2(false)
+        setFields( [{ value: null }] )
+    }
+
+    const handleChange = (i, e) => {
+        // setInput(e)
+        let values = [...fields];
+        // let similar = values.findIndex( x => x == e.target.value )
+        // if(similar < 0  ){
+            values[i].value = e;   
+            setFields(values);
+            let arr = values.map(x => x.value )
+            setadd( { ...add, subject: arr })
+
+            // }
+            // else{
+                //     alert(' you can\'t add a subject more than one time ')
+                // }
                 
-    //     console.log('field val', values, 'add', add );
-    //   }
+        console.log('field val', values, 'add', add, 'arr', arr );
+    }
     
-    // const handleAdd = () => {
-    //     const values = [...fields];
-    //     console.log('values lenght', values.length );
-    //     if( values.length < 8 ){
-    //         values.push( null );
-    //         setFields(values);
-    //     }
-    //     else{
-    //         alert('Total Subject is 8 , you can\'t add more field' )
-    //     }
-    //     console.log('handle add', values );
-    //   }
+    const handleAdd = () => {
+        const values = [...fields];
+        console.log('values lenght', values.length );
+        if( values.length < 8 ){
+            values.push({ value: null });
+            setFields(values);
+        }
+        else{
+            alert('Total Subject is 8 , you can\'t add more field' )
+        }
+        console.log('handle add', values );
+      }
     
-    // const handleRemove = (i) => {
-    //     const values = [...fields];
-    //     if(i >   0){
-    //         values.splice(i, 1);
-    //         setFields(values);
-    //     }
-    //     else{
-    //         alert('you must add a subject')
-    //     }
-    //     console.log('handle remove', values );
-    //   }
+    const handleRemove = (i) => {
+        const values = [...fields];
+        if(i >   0){
+            values.splice(i, 1);
+            setFields(values);
+        }
+        else{
+            alert('you must add a subject')
+        }
+        console.log('handle remove', values );
+      }
 
     // delete
 
@@ -175,7 +224,8 @@ const StudentTable = ( { info } ) => {
                 id: delInfo.id
             }
         })        
-        let arr = info2;
+        // let arr = info2;
+        let arr = info2.map( x => { let newdata = {...x};  return newdata })
         let index = arr.findIndex(x => x.id == delInfo.id )
         let remove = arr.splice(index,1);
         setInfo2(arr);
@@ -193,8 +243,9 @@ const StudentTable = ( { info } ) => {
 
     const delSubject = () => {
         console.log('delete subject', delsub );
-        let arr = delsub.from.Subjects
+        let arr = [...delsub.from.Subjects]
         let delindex = arr.findIndex(x => x == delsub.deletesub )
+        console.log('arr', arr, 'del index', delindex ,  );
         let remove = arr.splice(delindex, 1 )
         
         updateSubject({
@@ -204,7 +255,8 @@ const StudentTable = ( { info } ) => {
             }
         })
 
-        let arr2 = info2;
+        // let arr2 = [...info2];
+        let arr2 = info2.map( x => { let newdata = {...x};  return newdata })
         for(let i in arr2 ){
             if(arr2[i].id == delsub.from.id ){
                 arr2[i].Subjects = arr
@@ -218,16 +270,18 @@ const StudentTable = ( { info } ) => {
 
     // subject table function
 
-    const [info3, setInfo] = useState(info2);
+    const [toSubject, setTosubject] = useState(info2);
     const [ subject, setSubject ] = useState([]);
+
+    console.log('to subject', toSubject );
 
     useEffect(() => {
         
     // setTimeout(() => {
     //     console.log('run after 2 second')
-
+        setTosubject(info2);
         let arr = [];
-        let subjectarr = info3.map((v) => v.Subjects )
+        let subjectarr = toSubject.map((v) => v.Subjects )
         console.log('subjectarr', subjectarr );
         subjectarr.map((x) =>  x.map(y =>  arr.push(y) ) )
         // setSubject( subject.push(subjectarr) )
@@ -237,6 +291,8 @@ const StudentTable = ( { info } ) => {
         arr = [...new Set(arr)];
         console.log('arr', arr );
         let subarr = [];
+        let info3 = toSubject.map( x =>{ let newdata = {...x}; return newdata })
+        console.log('info3', info3, 'tosubject', toSubject  );
         for(let i in info3){
             for(let j in  info3[i].Subjects ){
                 // console.log('inside for loop', info3[i].Subjects[j], info3[i].Name, arr.map(i => i ) );
@@ -262,10 +318,10 @@ const StudentTable = ( { info } ) => {
         console.log( 'subarr', subarr );
 
     // }, 2000);
-    }, [ modal, modal2, modal3, modal4 ])
+    }, [ modal, modal2, modal3, modal4, toSubject ])
 
    
-
+    if(load === true) return 'Loading';
     return (
         <div style={{ position: 'relative' }} className={styles.tablediv} >
             <h1 style={{ color: 'darkcyan', textAlign: 'center' }} > Student Table </h1>
@@ -311,7 +367,20 @@ const StudentTable = ( { info } ) => {
                 <div  className={styles.modal}  >
                     <h2 style={{ color: 'darkcyan' }} > Add Subjects </h2>
                     <div className={ styles.modalinner } >
-                    <SubjectDropdown setInput={setInput} setadd={setadd} add={add} /* handleChange={handleChange} idx={idx} */ />
+                    {/* <SubjectDropdown setInput={setInput} setadd={setadd} add={add}  /> */}
+                    <div className={styles.dropdown} >
+                    <select name="selectList" id="selectList"  onClick={ (e) =>  onDropdownclk(e.target.value) }  >
+                      <option value="select" > select a subject </option>
+                      <option value="BANGLA">BANGLA</option>
+                      <option value="ENGLISH">ENGLISH</option>
+                      <option value="MATH">MATH</option>
+                      <option value="PHYSICS">PHYSICS</option>
+                      <option value="CHEMISTRY">CHEMISTRY</option>
+                      <option value="STATISTICS">STATISTICS</option>
+                      <option value="BIOLOGY">BIOLOGY</option>
+                      <option value="RELIGION">RELIGION</option>
+                    </select>
+                    </div>
                     {/* <input placeholder="write Subjects Here" onChange={ (e) => setInput(e.target.value)  } /> */}
                     <button onClick={ () => submitBtn() }  style={{ width: '20%', marginTop: '20px' }} > Submit </button>
                     <button onClick={ () => setModal(false) } style={{ width: '20%', marginBottom: '50px' }} > Close </button>
@@ -329,18 +398,19 @@ const StudentTable = ( { info } ) => {
                     <input placeholder="write student Email" type="email"  onChange={ (e) => setadd({...add, email: e.target.value })  } />
                     <input placeholder="write student Phone No."   onChange={ (e) => setadd({...add, phone: e.target.value })  } />
                     <input type="date"  onChange={ (e) => setadd({...add, dob: e.target.value })  } />
-                    <SubjectDropdown setadd={setadd} setInput={setInput} add={add} />
-                    {/* <button type="button" onClick={() => handleAdd()}  style={{ width: '6rem' }} > Add new + </button> */}
-                    {/* {fields.map((field, idx) => {
+                    {/* <SubjectDropdown setadd={setadd} setInput={setInput} add={add} /> */}
+                    {/* <SubjectDropdown setadd={setadd} setInput={setInput} add={add}  handleChange={handleChange} idx={idx}  /> */}
+                    {fields.map((field, idx) => {
                         return (
-                        <div key={`${field}-${idx}`} style={{ display: 'flex', alignItems: 'baseline' }} >
+                            <div key={`${field}-${idx}`} style={{ display: 'flex', alignItems: 'baseline' }} >
                             <SubjectDropdown setadd={setadd} setInput={setInput} add={add}  handleChange={handleChange} idx={idx}  />
-                            <button type="button" onClick={() => handleRemove(idx)}  style={{ height: '20px', margin: '0 5px' }} > X </button>
+                            <button type="button" onClick={() => handleRemove(idx)}  style={{ height: '20px', margin: '0 5px', backgroundColor: 'red', color: 'white', border: 'none', borderRadius: '.2rem', boxShadow: '0 0 5px 2px rgba(0,0,0,.3)', cursor: 'pointer' }} > X </button>
                         </div>
                         );
-                    })} */}
+                    })}
+                    <button type="button" onClick={() => handleAdd()}  style={{ width: '6rem', backgroundColor: 'darkslategray' }} > Add new + </button>
                     <button type="submit" style={{ backgroundColor: 'darkcyan' }} > Submit </button>
-                    <button onClick={ () => setModal2(false) } > Close </button>
+                    <button onClick={ () =>  onClosenewstumodal()    } > Close </button>
                     </form>
                     </div>
                 </div>
