@@ -25,6 +25,7 @@ const StudentTable = ( { info } ) => {
     const [fields, setFields] = useState([{ value: null }]);
     const [load, setload ] = useState(false)
 
+    console.log('info2', info2 );
   
     const [ updateSubject, {updateerr} ] = useMutation(updateSubjectQuery)
     const [ createPost, {createerr} ] = useMutation(createQuery)
